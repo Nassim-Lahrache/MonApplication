@@ -1,7 +1,11 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { ZonesValidator } from '../shared/longueur-minimum/longueur-minimum.component';
+import { CategorieService } from './categorie.service';
 
 import { ProblemeComponent } from './probleme.component';
+
 
 describe('ProblemeComponent', () => {
   let component: ProblemeComponent;
@@ -9,11 +13,13 @@ describe('ProblemeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule], //Ajouté
-      declarations: [ ProblemeComponent ]
+      imports: [ReactiveFormsModule, HttpClientModule], //Ajouté
+      declarations: [ ProblemeComponent ],
+      providers:[CategorieService]
     })
     .compileComponents();
   });
+
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProblemeComponent);
@@ -21,29 +27,29 @@ describe('ProblemeComponent', () => {
     fixture.detectChanges();
   });
 
+
   it('#1 Zone Prénom invalide avec 2 caractères ', () => {
   let errors = {};
   let zone = component.problemeForm.get('prenom');
   zone.setValue('a'.repeat(2));
   errors = zone.errors || {};
-  expect(errors['minlength']).toBeTruthy();
+  expect(errors['nbreCaracteresInsuffisants']).toBeTruthy();
   });
 
+
   it('#2 - Zone Prénom valide avec 3 caractères ', () => {
-    let errors = {};
     let zone = component.problemeForm.get('prenom');
     zone.setValue('a'.repeat(3));
-    errors = zone.errors || {};
-    expect(errors['minlength']).toBeFalsy();
+    expect(zone.valid).toBeTrue();
     });
 
+
   it('#3 - Zone Prénom valide avec 200 caractères ', () => {
-    let errors = {};
     let zone = component.problemeForm.get('prenom');
     zone.setValue('a'.repeat(200));
-    errors = zone.errors || {};
-    expect(errors['minlength']).toBeFalsy();
+    expect(zone.valid).toBeTrue();
     });
+
 
   it('#4 - Zone Prénom invalide avec aucune valeur ', () => {
     let errors = {};
@@ -52,20 +58,34 @@ describe('ProblemeComponent', () => {
     expect(zone.valid).toBeFalse();
     });
 
-  it('#5 - Zone Prénom valide avec 10 espaces ', () => {
-    let errors = {};
+    
+  it('#5 - Zone Prénom invalide avec 10 espaces ', () => {
+    let validator = ZonesValidator.longueurMinimum(3);
     let zone = component.problemeForm.get('prenom');
     zone.setValue(' '.repeat(10));
-    errors = zone.errors || {};
-    expect(errors['minlength']).toBeFalsy();
-    });
+
+    let result = validator(zone as AbstractControl);
+
+    expect(result['nbreCaracteresInsuffisants']).toBe(true);
+  });
+
       
-  it('#6 - Zone Prénom valide avec 2 espaces et 1 caractère ', () => {
-    let errors = {};
-    let zone = component.problemeForm.get('prenom');
+  it('#6 - Zone Prénom invalide avec 2 espaces et 1 caractère ', () => {
+    
+    let validator = ZonesValidator.longueurMinimum(3);
+    let zone = component.problemeForm.controls['prenom'];
     zone.setValue(' '.repeat(2) + 'a'.repeat(1));
-    errors = zone.errors || {};
-    expect(errors['minlength']).toBeFalsy();
+    
+    let result = validator(zone as AbstractControl);
+
+    expect(result['nbreCaracteresInsuffisants']).toBe(true);
     });
+
+    
+
+
+
+
+
 
 });

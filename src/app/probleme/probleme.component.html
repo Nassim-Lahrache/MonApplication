@@ -7,8 +7,8 @@
       <h5 class="card-title">Veuillez renseigner les zones suivantes et soumettre votre demande</h5>
       <div class="card-text">
 
-        <form class="form-horizontal" novalidate 
-        (ngSubmit)="save()" [formGroup]="problemeForm">
+        <form class="form-horizontal" novalidate (ngSubmit)="save()" [formGroup]="problemeForm">
+          <!-- Debut Zone prénom -->
           <div class="form-group row">
             <label for="prenomId" class="col-md-2 col-form-label text-right">Prénom : </label>
             <div class="col-md-10">
@@ -24,8 +24,8 @@
               <span class="form-text" *ngIf="(problemeForm.get('prenom').touched ||
                 problemeForm.get('prenom').dirty) &&
                 problemeForm.get('prenom').errors">
-                
-                <span *ngIf="problemeForm.get('prenom').errors.minlength">
+
+                <span *ngIf="problemeForm.get('prenom').errors.nbreCaracteresInsuffisants">
                   <small class="text-muted">
                     Indiquer au moins 3 caractères.
                   </small>
@@ -37,9 +37,76 @@
                   </small>
                 </span>
               </span>
-
             </div>
           </div>
+          <!-- Fin Zone prénom -->
+
+          <!-- Debut Zone Nom -->
+          <div class="form-group row">
+            <label for="nomId" class="col-md-2 col-form-label text-right">Nom : </label>
+            <div class="col-md-10">
+
+              <input class="form-control" id="nomId" type="text" placeholder="Votre nom ici (obligatoire)"
+                formControlName="nom" [ngClass]="{'is-invalid': (problemeForm.get('nom').touched ||
+                problemeForm.get('nom').dirty) &&
+                !problemeForm.get('nom').valid,
+                'is-valid': (problemeForm.get('nom').touched ||
+                (problemeForm.get('nom').dirty) &&
+                problemeForm.get('nom').valid) }" />
+
+              <span class="form-text" *ngIf="(problemeForm.get('nom').touched ||
+                problemeForm.get('nom').dirty) &&
+                problemeForm.get('nom').errors">
+
+                <span *ngIf="problemeForm.get('nom').errors.maxlength">
+                  <small class="text-muted">
+                    Indiquer moins de 50 caractères.
+                  </small>
+                </span>
+
+
+                <span *ngIf="problemeForm.get('nom').errors.required">
+                  <small class="text-muted">
+                    Merci de saisir votre nom de famille.
+                  </small>
+                </span>                
+              </span>
+            </div>
+          </div>
+          <!-- Fin Zone Nom -->
+
+
+
+          <!-- Debut Zone categorie -->
+          <div class="form-group row">
+            <label for="noCategorieId" class="col-md-2 col-form-label text-right">Type de problème : </label>
+            <div class="col-md-10">
+
+              <select class="form-control" id="noCategorieId" formControlName="noCategorie" 
+              [ngClass]="{'is-invalid': (problemeForm.get('noCategorie').touched ||
+                problemeForm.get('noCategorie').dirty) &&
+                !problemeForm.get('noCategorie').valid,
+                'is-valid': (problemeForm.get('noCategorie').touched ||
+                (problemeForm.get('noCategorie').dirty) &&
+                problemeForm.get('noCategorie').valid) }">
+                <option value="">Sélectionner un type de problème (Obligatoire)...</option>               
+                <option *ngFor="let cat of categoriesProblemes" [value]="cat.id"> {{cat.descriptionTypeProbleme}}</option>
+              </select>
+
+              <span class="form-text" *ngIf="(problemeForm.get('noCategorie').touched ||
+                problemeForm.get('noCategorie').dirty) &&
+                problemeForm.get('noCategorie').errors">
+
+                <span *ngIf="problemeForm.get('noCategorie').errors.required">
+                  <small class="text-muted">
+                    Merci de sélectionner un problème.
+                  </small>
+                </span>
+              </span>
+            </div>
+          </div>
+          <!-- Fin Zone categorie -->
+
           <button type="button" class="btn btn-secondary">Sauvegarder</button>
         </form>
       </div>
