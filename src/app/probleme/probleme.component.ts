@@ -43,7 +43,7 @@ export class ProblemeComponent implements OnInit {
 
   } // ngOnInit
 
-  // code à modifier venant du bloc-notes
+  //code à modifier venant du bloc-notes
   //datesGroup --> courrielGroup
 	//dateCommande --> courriel
 	//dateExpedition --> courrielConfirmation
@@ -57,11 +57,11 @@ export class ProblemeComponent implements OnInit {
     // Pour enlever les messages d'erreur si le controle contenait des données invalides
     //courrielControl.clearValidators();
     //courrielControl.reset();  
-    //courrielControl.disable();  
+    courrielControl.disable();  
 
     //courrielConfirmationControl.clearValidators();
     //courrielConfirmationControl.reset();    
-    //courrielConfirmationControl.disable();
+    courrielConfirmationControl.disable();
 
     //telephoneControl.clearValidators();
     telephoneControl.reset();    
