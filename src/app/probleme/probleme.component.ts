@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZonesValidator } from '../shared/longueur-minimum/longueur-minimum.component';
 import { ITypeProbleme } from './typeProbleme';
 import { CategorieService } from './categorie.service';
-//import { PassThrough } from 'node:stream';
+
 
 @Component({
   selector: 'Inter-probleme',
@@ -47,43 +47,44 @@ export class ProblemeComponent implements OnInit {
   //datesGroup --> courrielGroup
 	//dateCommande --> courriel
 	//dateExpedition --> courrielConfirmation
-  appliquerNotifications(typeCueillette: string): void {
+  appliquerNotifications(): void {
     const courrielControl = this.problemeForm.get('courrielGroup.courriel');
     const courrielConfirmationControl = this.problemeForm.get('courrielGroup.courrielConfirmation');   
     const courrielGroupControl = this.problemeForm.get('courrielGroup');   
     const telephoneControl = this.problemeForm.get('telephone');
 
     // Tous remettre à zéro
-    courrielControl.clearValidators();
-    courrielControl.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invalides
-    courrielControl.disable();  
+    // Pour enlever les messages d'erreur si le controle contenait des données invalides
+    //courrielControl.clearValidators();
+    //courrielControl.reset();  
+    //courrielControl.disable();  
 
-    courrielConfirmationControl.clearValidators();
-    courrielConfirmationControl.reset();    
-    courrielConfirmationControl.disable();
+    //courrielConfirmationControl.clearValidators();
+    //courrielConfirmationControl.reset();    
+    //courrielConfirmationControl.disable();
 
-    telephoneControl.clearValidators();
+    //telephoneControl.clearValidators();
     telephoneControl.reset();    
-    telephoneControl.disable();
+    //telephoneControl.disable();
 
 
-    if (typeCueillette === 'ParCourriel') {   
-      courrielControl.setValidators([Validators.required]);      
-      courrielControl.enable();  
-      courrielConfirmationControl.setValidators([Validators.required]);              
-      courrielConfirmationControl.enable();  
+   // if (typeCueillette === 'ParCourriel') {   
+     // courrielControl.setValidators([Validators.required]);      
+     // courrielControl.enable();  
+     // courrielConfirmationControl.setValidators([Validators.required]);              
+     // courrielConfirmationControl.enable();  
             // Si le validateur est dans un autre fichier l'écrire sous la forme suivante : 
             // ...Validators.compose([classeDuValidateur.NomDeLaMethode()])])
 
             //courrielGroupControl.setValidators([Validators.compose([datesValides])]);     
 
-      } else if(typeCueillette === 'ParTelephone') {
-          courrielControl.setValidators([Validators.required]);      
-          courrielControl.disable();           
-        }
-    courrielControl.updateValueAndValidity();   
-    courrielConfirmationControl.updateValueAndValidity();
-    telephoneControl.updateValueAndValidity();
+    //  } else if(typeCueillette === 'ParTelephone') {
+     //     courrielControl.setValidators([Validators.required]);      
+     //     courrielControl.disable();           
+     //   }
+   // courrielControl.updateValueAndValidity();   
+   // courrielConfirmationControl.updateValueAndValidity();
+   // telephoneControl.updateValueAndValidity();
   }
   save(): void {}
 }

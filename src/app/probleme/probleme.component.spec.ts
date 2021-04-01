@@ -81,9 +81,24 @@ describe('ProblemeComponent', () => {
     expect(result['nbreCaracteresInsuffisants']).toBe(true);
     });
 
+
+  it('#15 - Zone TELEPHONE est désactivée quand ne pas me notifier ', () => {
+  
+    component.appliquerNotifications();
+    let zone = component.problemeForm.get('telephone');
+    expect(zone.status).toEqual('DISABLED');
+    });
+
+    it('#16 - Zone TELEPHONE est vide quand ne pas me notifier ', () => {
+  
+      component.appliquerNotifications();
+      let zone = component.problemeForm.get('telephone');
+      expect(zone.value).toBeNull();
+      });
+
     
 
-
+      
 
 
 
