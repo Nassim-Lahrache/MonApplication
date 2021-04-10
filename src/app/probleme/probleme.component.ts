@@ -1,9 +1,9 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZonesValidator } from '../shared/longueur-minimum/longueur-minimum.component';
 import { ITypeProbleme } from './typeProbleme';
 import { CategorieService } from './categorie.service';
-
+import { emailMatcherValidator } from '../shared/email-matcher/email-matcher.component';
 
 @Component({
   selector: 'Inter-probleme',
@@ -29,8 +29,8 @@ export class ProblemeComponent implements OnInit {
       noTypeProbleme: ['', Validators.required], 
 
       courrielGroup: this.fb.group({
-      courriel: [{value: '', disabled: true}],
-      courrielConfirmation: [{value: '', disabled: true}],
+      courriel: [{value: '', disabled: true}, [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]],
+      courrielConfirmation: [{value: '', disabled: true}, [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]],
       }),
 
       telephone: [{value: '', disabled: true}]
@@ -41,50 +41,52 @@ export class ProblemeComponent implements OnInit {
     .subscribe(cat => this.categoriesProblemes = cat,
                error => this.errorMessage = <any>error);  
 
-  } // ngOnInit
+  } 
+  
+  // ngOnInit
 
   //code à modifier venant du bloc-notes
   //datesGroup --> courrielGroup
 	//dateCommande --> courriel
 	//dateExpedition --> courrielConfirmation
-  appliquerNotifications(): void {
+  appliquerNotifications(typeNotification: string): void {
     const courrielControl = this.problemeForm.get('courrielGroup.courriel');
     const courrielConfirmationControl = this.problemeForm.get('courrielGroup.courrielConfirmation');   
     const courrielGroupControl = this.problemeForm.get('courrielGroup');   
     const telephoneControl = this.problemeForm.get('telephone');
 
-    // Tous remettre à zéro
-    // Pour enlever les messages d'erreur si le controle contenait des données invalides
-    //courrielControl.clearValidators();
-    //courrielControl.reset();  
+    //Tous remettre à zéro
+    //Pour enlever les messages d'erreur si le controle contenait des données invalides
+    courrielControl.clearValidators();
+    courrielControl.reset();  
     courrielControl.disable();  
 
-    //courrielConfirmationControl.clearValidators();
-    //courrielConfirmationControl.reset();    
+    courrielConfirmationControl.clearValidators();
+    courrielConfirmationControl.reset();    
     courrielConfirmationControl.disable();
 
-    //telephoneControl.clearValidators();
+    telephoneControl.clearValidators();
     telephoneControl.reset();    
-    //telephoneControl.disable();
+    telephoneControl.disable();
 
 
-   // if (typeCueillette === 'ParCourriel') {   
-     // courrielControl.setValidators([Validators.required]);      
-     // courrielControl.enable();  
-     // courrielConfirmationControl.setValidators([Validators.required]);              
-     // courrielConfirmationControl.enable();  
-            // Si le validateur est dans un autre fichier l'écrire sous la forme suivante : 
-            // ...Validators.compose([classeDuValidateur.NomDeLaMethode()])])
+    if (typeNotification === 'ParCourriel') {   
+      courrielControl.setValidators([Validators.required]);      
+      courrielControl.enable();  
+      courrielConfirmationControl.setValidators([Validators.required]);              
+      courrielConfirmationControl.enable();      
+      courrielGroupControl.setValidators([Validators.compose([emailMatcherValidator.courrielDifferents()])]);
+            
+    } else if(typeNotification === 'ParTelephone') {
 
-            //courrielGroupControl.setValidators([Validators.compose([datesValides])]);     
-
-    //  } else if(typeCueillette === 'ParTelephone') {
-     //     courrielControl.setValidators([Validators.required]);      
-     //     courrielControl.disable();           
-     //   }
-   // courrielControl.updateValueAndValidity();   
-   // courrielConfirmationControl.updateValueAndValidity();
-   // telephoneControl.updateValueAndValidity();
+      courrielControl.setValidators([Validators.required]);      
+      courrielControl.disable();           
+      }
+      courrielGroupControl.updateValueAndValidity();
+      courrielControl.updateValueAndValidity();   
+      courrielConfirmationControl.updateValueAndValidity();
+      telephoneControl.updateValueAndValidity();
+      
   }
   save(): void {}
 }
