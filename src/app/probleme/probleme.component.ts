@@ -29,8 +29,8 @@ export class ProblemeComponent implements OnInit {
       noTypeProbleme: ['', Validators.required], 
 
       courrielGroup: this.fb.group({
-      courriel: [{value: '', disabled: true}, [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]],
-      courrielConfirmation: [{value: '', disabled: true}, [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]],
+      courriel: [{value: '', disabled: true}],
+      courrielConfirmation: [{value: '', disabled: true}]
       }),
 
       telephone: [{value: '', disabled: true}]
@@ -56,7 +56,6 @@ export class ProblemeComponent implements OnInit {
     const telephoneControl = this.problemeForm.get('telephone');
 
     //Tous remettre à zéro
-    //Pour enlever les messages d'erreur si le controle contenait des données invalides
     courrielControl.clearValidators();
     courrielControl.reset();  
     courrielControl.disable();  
@@ -71,16 +70,16 @@ export class ProblemeComponent implements OnInit {
 
 
     if (typeNotification === 'ParCourriel') {   
-      courrielControl.setValidators([Validators.required]);      
+      courrielControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);      
       courrielControl.enable();  
-      courrielConfirmationControl.setValidators([Validators.required]);              
+      courrielConfirmationControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);              
       courrielConfirmationControl.enable();      
       courrielGroupControl.setValidators([Validators.compose([emailMatcherValidator.courrielDifferents()])]);
             
     } else if(typeNotification === 'ParTelephone') {
+      
+      telephoneControl.setValidators([Validators.required]);  
 
-      courrielControl.setValidators([Validators.required]);      
-      courrielControl.disable();           
       }
       courrielGroupControl.updateValueAndValidity();
       courrielControl.updateValueAndValidity();   
