@@ -26,20 +26,28 @@ export class ProblemeComponent implements OnInit {
       nom: ['', [Validators.required, Validators.maxLength(50)]],
       noCategorie: ['', [Validators.required]],
      
-      noTypeProbleme: ['', Validators.required], 
+      
 
+      notification: ['pasNotification'],
       courrielGroup: this.fb.group({
       courriel: [{value: '', disabled: true}],
       courrielConfirmation: [{value: '', disabled: true}]
       }),
 
-      telephone: [{value: '', disabled: true}]
+      telephone: [{value: '', disabled: true}],
+
+      descriptionProbleme: ['', [Validators.required, Validators.minLength(5)]],
+      noUnite: '',
+      dateProbleme: {value: Date(), disabled: true}
       
     });
 
     this.categories.obtenirCategories()
     .subscribe(cat => this.categoriesProblemes = cat,
                error => this.errorMessage = <any>error);  
+
+          this.problemeForm.get('notification').valueChanges
+          .subscribe(value => this.appliquerNotifications(value));
 
   } 
   
